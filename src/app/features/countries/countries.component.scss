@@ -1,0 +1,37 @@
+.countries-filters {
+    display: grid;
+    grid-template-columns: auto 16rem;
+    gap: 2rem;
+}
+
+.countries-data {
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
+    justify-content: space-evenly;
+    & > div {
+        width: 100%;
+    }
+}
+
+.countries-spinner {
+    height: calc(100vh - 6rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.countries-noitems {
+    display: flex;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+@media screen and (max-width: 959px) {
+    .countries-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

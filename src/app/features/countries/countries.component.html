@@ -1,0 +1,49 @@
+@if (loading) {
+  <div class="countries-spinner">
+    <div>
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+  </div>
+} @else if (error) {
+  <p-message severity="error">No se pudo establecer una conexión con el servidor</p-message>
+} @else {
+  <section class="countries-filters">
+    <p-inputgroup>
+      <input pInputText [formControl]="search" placeholder="Buscar país" [style]="{ width: '100%' }" />
+      <p-inputgroup-addon>
+        <p-button
+          icon="pi pi-times"
+          severity="secondary"
+          [pTooltip]="search.value ? 'Limpiar' : ''"
+          tooltipPosition="top"
+          (click)="resetInput()"
+          [disabled]="!search.value"
+        />
+      </p-inputgroup-addon>
+    </p-inputgroup>
+
+    <p-select
+      [formControl]="region"
+      [options]="regions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Selecciona una región"
+      scrollHeight="250px"
+      [showClear]="true"
+    />
+  </section>
+
+  <section>
+    @if (filteredCountries.length > 0) {
+      <div class="countries-data">
+        @for (country of filteredCountries; track $index) {
+          <div>
+            <app-country-card [country]="country"></app-country-card>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="countries-noitems">No se encontraron países con el filtro especificado.</p>
+    }
+  </section>
+}
