@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 
 import { providePrimeNG } from 'primeng/config';
 
-import Aura from '@primeng/themes/aura';
+import { bluePreset } from '../styles/themes/blue-preset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: bluePreset,
         options: {
           prefix: 'p',
           darkModeSelector: 'system',

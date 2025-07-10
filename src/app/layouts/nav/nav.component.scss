@@ -1,0 +1,11 @@
+section {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 6.35rem);
+    & > :last-child {
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+}

@@ -1,0 +1,8 @@
+<header>
+  <div>
+    <p-button (click)="visible.set(true)" icon="pi pi-bars" [rounded]="true" variant="text" size="large" />
+  </div>
+  <h1>{{ title() }}</h1>
+</header>
+
+<app-nav [visible]="visible"></app-nav>
