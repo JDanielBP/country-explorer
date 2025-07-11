@@ -2,6 +2,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -40,6 +41,7 @@ export class ViewCountryComponent implements OnInit {
   bg = viewChild<ElementRef>('bg');
 
   private countryService = inject(CountryService);
+  private location = inject(Location);
   private route = inject(ActivatedRoute);
   private sanitizer = inject(DomSanitizer);
   private titleService = inject(TitleService);
@@ -85,5 +87,9 @@ export class ViewCountryComponent implements OnInit {
   get mapUrl() {
     const url = `https://www.google.com/maps?q=${this.country.latlng[0]},${this.country.latlng[1]}&hl=es&z=6&output=embed`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

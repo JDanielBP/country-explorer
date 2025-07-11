@@ -8,7 +8,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -65,7 +65,6 @@ export class CountriesPageComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private titleService = inject(TitleService);
   private countryService = inject(CountryService);
-  private router = inject(Router);
 
   ngOnInit() {
     this.titleService.title = 'Listado de países';
@@ -99,9 +98,5 @@ export class CountriesPageComponent implements OnInit {
 
   resetInput() {
     this.search.setValue('');
-  }
-
-  selectedCountry(cca3: string) {
-    this.router.navigate(['/countries', cca3]);
   }
 }

@@ -1,4 +1,5 @@
 import { Component, inject, input, output, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -17,10 +18,10 @@ export class CountryCardComponent implements OnInit {
   fillIcon = '';
 
   country = input<Country>();
-  selectedCountry = output<string>();
   deletedCountry = output<string>();
 
   private messageService = inject(MessageService);
+  private router = inject(Router);
 
   ngOnInit() {
     const favorites = this.getFavorites();
@@ -40,7 +41,7 @@ export class CountryCardComponent implements OnInit {
   }
 
   onCountrySelected() {
-    this.selectedCountry.emit(this.country()!.cca3);
+    this.router.navigate(['/countries', this.country()!.cca3]);
   }
 
   onCountrySaved() {
