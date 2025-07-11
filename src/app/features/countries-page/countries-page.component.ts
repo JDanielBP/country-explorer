@@ -40,10 +40,10 @@ interface Entity {
     SelectModule,
     TooltipModule
   ],
-  templateUrl: './countries.component.html',
-  styleUrl: './countries.component.scss'
+  templateUrl: './countries-page.component.html',
+  styleUrl: './countries-page.component.scss'
 })
-export class CountriesComponent implements OnInit {
+export class CountriesPageComponent implements OnInit {
   loading = true;
   error = false;
 

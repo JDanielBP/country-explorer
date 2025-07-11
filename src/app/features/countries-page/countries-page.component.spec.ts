@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CountriesComponent } from './countries.component';
+import { CountriesPageComponent } from './countries-page.component';
 
-describe('CountriesComponent', () => {
-  let component: CountriesComponent;
-  let fixture: ComponentFixture<CountriesComponent>;
+describe('CountriesPageComponent', () => {
+  let component: CountriesPageComponent;
+  let fixture: ComponentFixture<CountriesPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CountriesComponent]
+      imports: [CountriesPageComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CountriesComponent);
+    fixture = TestBed.createComponent(CountriesPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

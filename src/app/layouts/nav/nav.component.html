@@ -3,7 +3,17 @@
     <p-menu [model]="items" />
     <div>
       @for (item of socialMedia; track $index) {
-        <a [href]="item.url" pButton [icon]="item.icon" [rounded]="true" target="_blank" rel="noopener noreferrer"> </a>
+        <a
+          [href]="item.url"
+          pButton
+          [icon]="item.icon"
+          [rounded]="true"
+          [pTooltip]="item.tooltip"
+          tooltipPosition="top"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+        </a>
       }
     </div>
   </section>
