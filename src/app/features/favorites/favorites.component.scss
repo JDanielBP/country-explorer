@@ -1,0 +1,12 @@
+.fav-spinner {
+    height: calc(100vh - 6rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fav-noitems {
+    display: flex;
+    margin-top: 2rem;
+    justify-content: center;
+}

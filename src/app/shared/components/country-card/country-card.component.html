@@ -19,6 +19,14 @@
         tooltipPosition="top"
         (click)="onCountrySelected()"
       />
+      <p-button
+        [icon]="'pi pi-heart' + fillIcon"
+        [rounded]="true"
+        variant="text"
+        [pTooltip]="isFavorite() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+        tooltipPosition="top"
+        (click)="onCountrySaved()"
+      />
     </div>
   </ng-template>
 </p-card>

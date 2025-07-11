@@ -1,0 +1,23 @@
+@if (loading) {
+  <div class="fav-spinner">
+    <div>
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+  </div>
+} @else if (error) {
+  <p-message severity="error">No se pudo establecer una conexión con el servidor</p-message>
+} @else {
+  <section>
+    @if (filteredCountries.length > 0) {
+      <div class="countries-data">
+        @for (country of filteredCountries; track $index) {
+          <div>
+            <app-country-card [country]="country" (deletedCountry)="deletedCountry($event)"></app-country-card>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="fav-noitems">Aún no has agregado ningún país a Favoritos.</p>
+    }
+  </section>
+}

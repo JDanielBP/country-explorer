@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 import { Country } from '../../../core/models/countries.interface';
 
@@ -20,6 +20,20 @@ export class CountryService {
     const field = 'name,capital,flags,translations,region,cca3';
     const params = new HttpParams().set('fields', field);
     return this.http.get<Country[]>(`${this.baseUrl}/all`, { params });
+  }
+
+  /**
+   *
+   * @returns name, capital, flags, translations, region, cca3
+   */
+  getFavorites(): Observable<Country[]> {
+    const field = 'name,capital,flags,translations,region,cca3';
+    const params = new HttpParams().set('fields', field);
+
+    const cca3s = JSON.parse(localStorage.getItem('favorites') || '[]') as string[];
+    if (!cca3s) return of([]);
+
+    return this.http.get<Country[]>(`${this.baseUrl}/alpha?codes=${cca3s.join(',')}`, { params });
   }
 
   /**

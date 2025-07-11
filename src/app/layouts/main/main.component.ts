@@ -5,10 +5,8 @@ import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-main',
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [HeaderComponent, RouterOutlet],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent {
-  title = '';
-}
+export class MainComponent {}

@@ -1,5 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ButtonModule } from 'primeng/button';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -61,6 +62,7 @@ export class CountriesPageComponent implements OnInit {
     { value: 'Oceania', label: 'Oceanía' }
   ];
 
+  private destroyRef = inject(DestroyRef);
   private titleService = inject(TitleService);
   private countryService = inject(CountryService);
   private router = inject(Router);
@@ -84,7 +86,7 @@ export class CountriesPageComponent implements OnInit {
       this.search.valueChanges.pipe(map(value => ({ value, type: 'name' }) as Entity)),
       this.region.valueChanges.pipe(map(value => ({ value, type: 'region' }) as Entity))
     )
-      .pipe(debounceTime(300))
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.filteredCountries = this.countries.filter(
           c =>

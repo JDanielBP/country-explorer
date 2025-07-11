@@ -34,6 +34,12 @@ export class NavComponent implements OnInit {
             icon: 'pi pi-search',
             routerLink: 'countries',
             command: () => this.visible.set(false)
+          },
+          {
+            label: 'Favoritos',
+            icon: 'pi pi-heart',
+            routerLink: 'favorites',
+            command: () => this.visible.set(false)
           }
         ]
       }

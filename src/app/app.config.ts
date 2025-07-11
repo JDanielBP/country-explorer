@@ -3,6 +3,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
+import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { bluePreset } from '../styles/themes/blue-preset';
@@ -24,6 +25,7 @@ export const appConfig: ApplicationConfig = {
         }
       },
       ripple: true
-    })
+    }),
+    MessageService
   ]
 };
