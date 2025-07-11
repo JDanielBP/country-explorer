@@ -7,13 +7,13 @@ export interface Country {
   independent: boolean;
   status: string;
   unMember: boolean;
-  currencies: Currencies;
+  currencies: Record<string, Currencies>;
   idd: Idd;
   capital: string[];
   altSpellings: string[];
   region: string;
   subregion: string;
-  languages: Languages;
+  languages: Record<string, string>;
   latlng: number[];
   landlocked: boolean;
   borders: string[];
@@ -51,10 +51,6 @@ export interface CoatOfArms {
 }
 
 export interface Currencies {
-  EUR: Eur;
-}
-
-export interface Eur {
   symbol: string;
   name: string;
 }
@@ -82,10 +78,6 @@ export interface Gini {
 export interface Idd {
   root: string;
   suffixes: string[];
-}
-
-export interface Languages {
-  deu: string;
 }
 
 export interface Maps {

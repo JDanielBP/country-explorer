@@ -1,0 +1,103 @@
+.vc-bg-image {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: -1; // opcional si quieres que quede detrás
+    opacity: 0.15;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.vc-title {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.vc-spinner {
+    height: calc(100vh - 6rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+section {
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 2rem;
+}
+
+.fieldset-container {
+    width: 100%;
+}
+
+.vc-left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > :first-child {
+        margin: 0 0.5rem;
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 4rem;
+        max-height: 18rem;
+        & > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        & img {
+            max-height: 18rem;
+            min-height: auto;
+        }
+    }
+    & > :nth-child(2) {
+        margin-bottom: 2rem;
+    }
+}
+
+.vc-right-section {
+    & > :first-child {
+        margin-bottom: 2rem;
+    }
+}
+
+.vc-maps-container {
+    margin: 2rem;
+    & > iframe {
+        border-radius: 6px;
+    }
+}
+
+.vc-border-countries {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    & > a {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    a:hover {
+        cursor: pointer;
+    }
+    & > a > div:first-child {
+        width: 7rem;
+    }
+}
+
+.vc-no-border-countries {
+    margin-left: 1rem;
+}
+
+@media screen and (max-width: 959px) {
+    section {
+        grid-template-columns: 100%;
+    }
+}

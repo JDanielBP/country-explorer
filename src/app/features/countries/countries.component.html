@@ -38,7 +38,7 @@
       <div class="countries-data">
         @for (country of filteredCountries; track $index) {
           <div>
-            <app-country-card [country]="country"></app-country-card>
+            <app-country-card [country]="country" (selectedCountry)="selectedCountry($event)"></app-country-card>
           </div>
         }
       </div>

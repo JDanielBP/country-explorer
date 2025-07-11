@@ -7,6 +7,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Router, RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -35,6 +36,7 @@ interface Entity {
     MessageModule,
     ProgressSpinnerModule,
     ReactiveFormsModule,
+    RouterModule,
     SelectModule,
     TooltipModule
   ],
@@ -61,6 +63,7 @@ export class CountriesComponent implements OnInit {
 
   private titleService = inject(TitleService);
   private countryService = inject(CountryService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.titleService.title = 'Listado de países';
@@ -94,5 +97,9 @@ export class CountriesComponent implements OnInit {
 
   resetInput() {
     this.search.setValue('');
+  }
+
+  selectedCountry(cca3: string) {
+    this.router.navigate(['/countries', cca3]);
   }
 }

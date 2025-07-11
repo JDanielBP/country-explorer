@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -14,4 +14,9 @@ import { Country } from '../../../core/models/countries.interface';
 })
 export class CountryCardComponent {
   country = input<Country>();
+  selectedCountry = output<string>();
+
+  onCountrySelected() {
+    this.selectedCountry.emit(this.country()!.cca3);
+  }
 }

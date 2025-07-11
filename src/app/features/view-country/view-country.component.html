@@ -1,0 +1,96 @@
+@if (loading) {
+  <div class="vc-spinner">
+    <div>
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+  </div>
+} @else if (error) {
+  <p-message severity="error">No se pudo establecer una conexión con el servidor</p-message>
+} @else {
+  <div #bg class="vc-bg-image"></div>
+
+  <div class="vc-title">
+    <p-button icon="pi pi-arrow-left" [rounded]="true" routerLink="./countries"></p-button>
+    <h1>{{ country.translations['spa'].official }}</h1>
+  </div>
+  <section>
+    <div class="vc-left-section">
+      <div>
+        <div>
+          <img alt="flag" width="100%" [src]="country.flags.svg" />
+        </div>
+
+        <div>
+          @if (country.coatOfArms.png) {
+            <img alt="flag" width="100%" [src]="country.coatOfArms.png" />
+          }
+        </div>
+      </div>
+
+      <div class="fieldset-container">
+        <p-fieldset legend="Nombre y ubicación">
+          <p><strong>Nombre común:</strong> {{ country.translations['spa'].common }}</p>
+          <p><strong>Otros nombres:</strong> {{ country.altSpellings.join(', ') }}</p>
+          <p><strong>Región:</strong> {{ country.region }}</p>
+          <p><strong>Subregión:</strong> {{ country.subregion }}</p>
+          <p><strong>Capital:</strong> {{ country.capital }}</p>
+        </p-fieldset>
+      </div>
+
+      <div class="fieldset-container">
+        <p-fieldset legend="información">
+          <p><strong>Zona(s) Horaria(s): </strong> {{ country.timezones.join(', ') }}</p>
+          <p><strong>Área:</strong> {{ country.area | number }} km²</p>
+          <p><strong>Población:</strong> {{ country.population | number }}</p>
+          <p><strong>Densidad poblacional:</strong> {{ country.population / country.area | number }} hab/km²</p>
+          <p><strong>Idiomas:</strong></p>
+          <ul>
+            @for (item of country.languages | keyvalue; track $index) {
+              <li>{{ item.value }}</li>
+            }
+          </ul>
+          <p><strong>Monedas:</strong></p>
+          <ul>
+            @for (item of country.currencies | keyvalue; track $index) {
+              <li>{{ item.value.name }}</li>
+            }
+          </ul>
+          <p><strong>Código del país:</strong> {{ country.cca3 }}</p>
+          <p><strong>Dominio(s) de internet: </strong> {{ country.tld.join(', ') }}</p>
+          <p><strong>Código de llamada telefónica: </strong> {{ country.idd.root + country.idd.suffixes[0] }}</p>
+        </p-fieldset>
+      </div>
+    </div>
+
+    <div class="vc-right-section">
+      <div class="fieldset-container">
+        <p-fieldset legend="Ubicación geográfica">
+          <div class="vc-maps-container">
+            <iframe width="100%" height="400" style="border: 0" [src]="mapUrl" loading="lazy"> </iframe>
+          </div>
+        </p-fieldset>
+      </div>
+
+      <div class="fieldset-container">
+        <p-fieldset legend="Países fronterizos">
+          <div class="vc-border-countries">
+            @if (country.borders) {
+              @for (item of borderCountries; track $index) {
+                <a routerLink="/countries/{{ item.cca3 }}">
+                  <div>
+                    <img alt="flag" width="100%" [src]="item.flags.svg" />
+                  </div>
+                  <div>
+                    <strong>{{ item.translations['spa'].common }}</strong>
+                  </div>
+                </a>
+              }
+            } @else {
+              <p class="vc-no-border-countries">No hay países fronterizos.</p>
+            }
+          </div>
+        </p-fieldset>
+      </div>
+    </div>
+  </section>
+}

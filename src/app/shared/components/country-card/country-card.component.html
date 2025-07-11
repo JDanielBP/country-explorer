@@ -1,4 +1,4 @@
-<p-card [style]="{ width: '100%', height: '100%' }">
+<p-card [style]="{ width: '100%', height: '100%', position: 'relative' }">
   <ng-template #header>
     <div class="cc-image">
       <img alt="country" width="80%" [src]="country()?.flags?.svg" />
@@ -6,7 +6,19 @@
   </ng-template>
   <ng-template #title> {{ this.country()?.translations?.['spa']?.official }} </ng-template>
   <ng-template #subtitle> {{ this.country()?.translations?.['spa']?.common }} </ng-template>
-  <p>
+  <p class="cc-main">
     {{ country()?.capital }}
   </p>
+  <ng-template #footer>
+    <div class="cc-footer">
+      <p-button
+        icon="pi pi-eye"
+        [rounded]="true"
+        variant="text"
+        pTooltip="Ver"
+        tooltipPosition="top"
+        (click)="onCountrySelected()"
+      />
+    </div>
+  </ng-template>
 </p-card>
