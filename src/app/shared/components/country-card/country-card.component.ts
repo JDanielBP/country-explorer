@@ -75,7 +75,7 @@ export class CountryCardComponent implements OnInit {
 
       this.messageService.add({
         severity: 'success',
-        summary: 'País añádido a favoritos'
+        summary: 'País añadido a favoritos'
       });
     }
   }

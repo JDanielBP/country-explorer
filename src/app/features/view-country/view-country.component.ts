@@ -1,7 +1,7 @@
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
@@ -37,6 +37,7 @@ export class ViewCountryComponent implements OnInit {
 
   country: Country = EMPTY_COUNTRY;
   borderCountries: Country[] = [];
+  mapUrl: SafeResourceUrl | undefined;
 
   bg = viewChild<ElementRef>('bg');
 
@@ -50,6 +51,7 @@ export class ViewCountryComponent implements OnInit {
     effect(() => {
       const element = this.bg()?.nativeElement;
       if (element) element.style.backgroundImage = `url('${this.bgFlag()}')`;
+      this.mapUrl = this.getMapUrl();
     });
   }
 
@@ -84,7 +86,7 @@ export class ViewCountryComponent implements OnInit {
     this.titleService.title = 'Detalle de país';
   }
 
-  get mapUrl() {
+  getMapUrl() {
     const url = `https://www.google.com/maps?q=${this.country.latlng[0]},${this.country.latlng[1]}&hl=es&z=6&output=embed`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }

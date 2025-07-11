@@ -1,20 +1,25 @@
 <p-drawer [visible]="visible()" (onHide)="visible.set(false)" header="Menú">
-  <section>
+  <nav>
     <p-menu [model]="items" />
     <div>
-      @for (item of socialMedia; track $index) {
-        <a
-          [href]="item.url"
-          pButton
-          [icon]="item.icon"
-          [rounded]="true"
-          [pTooltip]="item.tooltip"
-          tooltipPosition="top"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-        </a>
-      }
+      <div>
+        @for (item of socialMedia; track $index) {
+          <a
+            [href]="item.url"
+            pButton
+            [icon]="item.icon"
+            [rounded]="true"
+            [pTooltip]="item.tooltip"
+            tooltipPosition="top"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+          </a>
+        }
+      </div>
+      <div>
+        <p>Country Explorer · José Daniel Benítez Peña</p>
+      </div>
     </div>
-  </section>
+  </nav>
 </p-drawer>

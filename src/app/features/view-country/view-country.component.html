@@ -13,6 +13,7 @@
     <p-button icon="pi pi-arrow-left" [rounded]="true" (click)="goBack()"></p-button>
     <h1>{{ country.translations['spa'].official }}</h1>
   </div>
+
   <section>
     <div class="vc-left-section">
       <div>
@@ -38,7 +39,7 @@
       </div>
 
       <div class="fieldset-container">
-        <p-fieldset legend="información">
+        <p-fieldset legend="Información">
           <p><strong>Zona(s) Horaria(s): </strong> {{ country.timezones.join(', ') }}</p>
           <p><strong>Área:</strong> {{ country.area | number }} km²</p>
           <p><strong>Población:</strong> {{ country.population | number }}</p>

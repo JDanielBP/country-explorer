@@ -1,8 +1,19 @@
 <header>
-  <div>
-    <p-button (click)="visible.set(true)" icon="pi pi-bars" [rounded]="true" variant="text" size="large" />
-  </div>
-  <h1>{{ title() }}</h1>
+  <section>
+    <div>
+      <p-button (click)="visible.set(true)" icon="pi pi-bars" [rounded]="true" variant="text" size="large" />
+    </div>
+    <h1>{{ title() }}</h1>
+  </section>
+  <section>
+    <p-button
+      [icon]="theme() === 'light-mode' ? 'pi pi-sun' : 'pi pi-moon'"
+      variant="text"
+      [rounded]="true"
+      (click)="toggleDarkMode()"
+      [pTooltip]="theme() === 'light-mode' ? 'Tema Claro' : 'Tema oscuro'"
+    ></p-button>
+  </section>
 </header>
 
 <app-nav [visible]="visible"></app-nav>

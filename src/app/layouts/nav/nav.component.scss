@@ -1,11 +1,21 @@
-section {
+nav {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 6.35rem);
     & > :last-child {
         margin-top: auto;
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
+        & > :first-child {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        & > :last-child > p {
+            margin: 0;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.6;
+            font-style: italic;
+        }
     }
 }
