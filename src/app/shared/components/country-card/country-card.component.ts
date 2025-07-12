@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, input, output, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -10,7 +11,7 @@ import { Country } from '../../../core/models/countries.interface';
 
 @Component({
   selector: 'app-country-card',
-  imports: [ButtonModule, CardModule, TooltipModule],
+  imports: [ButtonModule, CardModule, CommonModule, TooltipModule],
   templateUrl: './country-card.component.html',
   styleUrl: './country-card.component.scss'
 })

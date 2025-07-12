@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
 import { MessageModule } from 'primeng/message';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -15,17 +16,13 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { CountryCardComponent } from '../../shared/components/country-card/country-card.component';
 
-import { debounceTime, map, merge, tap } from 'rxjs';
+import { debounceTime, merge, tap } from 'rxjs';
+import { MenuItem } from 'primeng/api';
 
 import { CountryService } from '../../shared/services/country/country.service';
 import { TitleService } from '../../shared/services/title/title.service';
 
 import { Country } from '../../core/models/countries.interface';
-
-interface Entity {
-  value: string;
-  type: string;
-}
 
 @Component({
   selector: 'app-countries',
@@ -35,6 +32,7 @@ interface Entity {
     InputGroupAddonModule,
     InputGroupModule,
     InputTextModule,
+    MenuModule,
     MessageModule,
     PopoverModule,
     ProgressSpinnerModule,
@@ -56,13 +54,73 @@ export class CountriesPageComponent implements OnInit {
 
   search = new FormControl('');
   region = new FormControl('');
+  order = new FormControl('official-name-asc');
+
+  items: MenuItem[] = [
+    {
+      label: 'Ordernar por',
+      items: [
+        {
+          label: 'Nombre oficial (A - Z)',
+          icon: 'pi pi-sort-up',
+          command: () => this.order.setValue('official-name-asc')
+        },
+        {
+          label: 'Nombre oficial (Z -A)',
+          icon: 'pi pi-sort-down',
+          command: () => this.order.setValue('official-name-desc')
+        },
+        {
+          label: 'Nombre común (A - Z)',
+          icon: 'pi pi-sort-up',
+          command: () => this.order.setValue('common-name-asc')
+        },
+        {
+          label: 'Nombre común (Z - A)',
+          icon: 'pi pi-sort-down',
+          command: () => this.order.setValue('common-name-desc')
+        },
+        {
+          label: 'Capital (A - Z)',
+          icon: 'pi pi-sort-up',
+          command: () => this.order.setValue('capital-asc')
+        },
+        {
+          label: 'Capital (Z - A)',
+          icon: 'pi pi-sort-down',
+          command: () => this.order.setValue('capital-desc')
+        },
+        {
+          label: 'Mayor población',
+          icon: 'pi pi-sort-up',
+          command: () => this.order.setValue('population-desc')
+        },
+        {
+          label: 'Menor población',
+          icon: 'pi pi-sort-down',
+          command: () => this.order.setValue('population-asc')
+        },
+        {
+          label: 'Mayor área',
+          icon: 'pi pi-sort-up',
+          command: () => this.order.setValue('area-desc')
+        },
+        {
+          label: 'Menor área',
+          icon: 'pi pi-sort-down',
+          command: () => this.order.setValue('area-asc')
+        }
+      ]
+    }
+  ];
 
   regions = [
     { value: 'Africa', label: 'África' },
     { value: 'Americas', label: 'América' },
     { value: 'Asia', label: 'Asia' },
     { value: 'Europe', label: 'Europa' },
-    { value: 'Oceania', label: 'Oceanía' }
+    { value: 'Oceania', label: 'Oceanía' },
+    { value: 'Antarctic', label: 'Antártida' }
   ];
 
   op = viewChild<Popover>('op');
@@ -86,10 +144,7 @@ export class CountriesPageComponent implements OnInit {
       }
     });
 
-    merge(
-      this.search.valueChanges.pipe(map(value => ({ value, type: 'name' }) as Entity)),
-      this.region.valueChanges.pipe(map(value => ({ value, type: 'region' }) as Entity))
-    )
+    merge(this.search.valueChanges, this.region.valueChanges, this.order.valueChanges)
       .pipe(
         tap(() => {
           this.loadingSearch = true;
@@ -107,19 +162,43 @@ export class CountriesPageComponent implements OnInit {
               c.cca3.includes(this.search.value?.toLowerCase() ?? '')) &&
             c.region.toLowerCase().includes(this.region.value?.toLowerCase() ?? '')
         );
+        this.orderBy(this.order.value!);
       });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  toggle(e: any) {
-    this.op()?.toggle(e);
-  }
-
-  hide() {
-    this.op()?.hide();
   }
 
   resetInput() {
     this.search.setValue('');
+  }
+
+  orderBy(order: string) {
+    this.filteredCountries.sort((a, b) => {
+      switch (order) {
+        case 'official-name-asc':
+          return a.translations?.['spa'].official.localeCompare(b.translations?.['spa'].official);
+        case 'official-name-desc':
+          return b.translations?.['spa'].official.localeCompare(a.translations?.['spa'].official);
+        case 'common-name-asc':
+          return a.translations?.['spa'].common.localeCompare(b.translations?.['spa'].common);
+        case 'common-name-desc':
+          return b.translations?.['spa'].common.localeCompare(a.translations?.['spa'].common);
+        case 'capital-asc': {
+          if (!a.capital[0]) return 1;
+          else if (!b.capital[0]) return -1;
+          else return (a.capital[0] ?? '').localeCompare(b.capital[0] ?? '');
+        }
+        case 'capital-desc':
+          return (b.capital[0] ?? '').localeCompare(a.capital[0] ?? '');
+        case 'population-asc':
+          return a.population - b.population;
+        case 'population-desc':
+          return b.population - a.population;
+        case 'area-asc':
+          return a.area - b.area;
+        case 'area-desc':
+          return b.area - a.area;
+        default:
+          return 0;
+      }
+    });
   }
 }

@@ -1,8 +1,12 @@
 .countries-filters {
     margin-bottom: 2rem;
     display: grid;
-    grid-template-columns: auto 16rem;
+    grid-template-columns: auto 19.5rem;
     gap: 2rem;
+    & > :last-child {
+        display: flex;
+        gap: 2rem;
+    }
 }
 
 .countries-spinner {

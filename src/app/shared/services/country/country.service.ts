@@ -14,10 +14,10 @@ export class CountryService {
 
   /**
    *
-   * @returns name, capital, flags, translations, region, cca3
+   * @returns name, capital, flags, population, translations, region, subregion, area, cca3
    */
   getCountries(): Observable<Country[]> {
-    const field = 'name,capital,flags,translations,region,cca3';
+    const field = 'name,capital,flags,population,translations,region,subregion,area,cca3';
     const params = new HttpParams().set('fields', field);
     return this.http.get<Country[]>(`${this.baseUrl}/all`, { params });
   }
@@ -28,12 +28,12 @@ export class CountryService {
    */
   getFavorites(): Observable<Country[]> {
     const field = 'name,capital,flags,translations,region,cca3';
-    const params = new HttpParams().set('fields', field);
 
     const cca3s = JSON.parse(localStorage.getItem('favorites') || '[]') as string[];
     if (!cca3s) return of([]);
 
-    return this.http.get<Country[]>(`${this.baseUrl}/alpha?codes=${cca3s.join(',')}`, { params });
+    const params = new HttpParams().set('codes', cca3s.join(',')).set('fields', field);
+    return this.http.get<Country[]>(`${this.baseUrl}/alpha`, { params });
   }
 
   /**

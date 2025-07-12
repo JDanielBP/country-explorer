@@ -6,9 +6,13 @@
   </ng-template>
   <ng-template #title> {{ this.country()?.translations?.['spa']?.official }} </ng-template>
   <ng-template #subtitle> {{ this.country()?.translations?.['spa']?.common }} </ng-template>
-  <p class="cc-main">
-    {{ country()?.capital }}
-  </p>
+  <div class="cc-main">
+    <p><strong>Capital: </strong> {{ country()?.capital }}</p>
+    <p><strong>Región: </strong> {{ country()?.region }}</p>
+    <p><strong>Sub-Región: </strong> {{ country()?.subregion }}</p>
+    <p><strong>Area: </strong> {{ country()?.area }} km²</p>
+    <p><strong>Población: </strong> {{ country()?.population | number }}</p>
+  </div>
   <ng-template #footer>
     <div class="cc-footer">
       <p-button

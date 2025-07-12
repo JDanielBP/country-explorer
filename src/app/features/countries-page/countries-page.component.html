@@ -28,24 +28,39 @@
           severity="secondary"
           pTooltip="Más información"
           tooltipPosition="bottom"
-          (click)="toggle($event)"
+          (click)="op.toggle($event)"
         ></p-button>
       </p-inputgroup-addon>
 
       <p-popover #op>
-        <span (click)="hide()"> Buscar país por nombre, capital o región</span>
+        <span (click)="op.hide()"> Buscar país por nombre, capital o región</span>
       </p-popover>
+
+      <p-menu #filterMenu [model]="items" [popup]="true" />
     </p-inputgroup>
 
-    <p-select
-      [formControl]="region"
-      [options]="regions"
-      optionLabel="label"
-      optionValue="value"
-      placeholder="Selecciona una región"
-      scrollHeight="250px"
-      [showClear]="true"
-    />
+    <div>
+      <p-select
+        [formControl]="region"
+        [options]="regions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona una región"
+        scrollHeight="250px"
+        [showClear]="true"
+        [style]="{ width: '100%' }"
+      />
+
+      <div>
+        <p-button
+          icon="pi pi-sort"
+          severity="secondary"
+          pTooltip="Ordenar por"
+          tooltipPosition="bottom"
+          (click)="filterMenu.toggle($event)"
+        ></p-button>
+      </div>
+    </div>
   </section>
 
   <section>
