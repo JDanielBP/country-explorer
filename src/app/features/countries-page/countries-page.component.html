@@ -10,16 +10,31 @@
   <section class="countries-filters">
     <p-inputgroup>
       <input pInputText [formControl]="search" placeholder="Buscar país" [style]="{ width: '100%' }" />
+
       <p-inputgroup-addon>
         <p-button
           icon="pi pi-times"
           severity="secondary"
           [pTooltip]="search.value ? 'Limpiar' : ''"
-          tooltipPosition="top"
-          (click)="resetInput()"
+          tooltipPosition="bottom"
           [disabled]="!search.value"
+          (click)="resetInput()"
         />
       </p-inputgroup-addon>
+
+      <p-inputgroup-addon>
+        <p-button
+          icon="pi pi-info-circle"
+          severity="secondary"
+          pTooltip="Más información"
+          tooltipPosition="bottom"
+          (click)="toggle($event)"
+        ></p-button>
+      </p-inputgroup-addon>
+
+      <p-popover #op>
+        <span (click)="hide()"> Buscar país por nombre, capital o región</span>
+      </p-popover>
     </p-inputgroup>
 
     <p-select
@@ -34,6 +49,14 @@
   </section>
 
   <section>
+    @if (loadingSearch) {
+      <div class="loading-search-spinner">
+        <div>
+          <p-progress-spinner ariaLabel="loading" />
+        </div>
+      </div>
+    }
+
     @if (filteredCountries.length > 0) {
       <div class="countries-data">
         @for (country of filteredCountries; track $index) {
