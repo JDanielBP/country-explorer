@@ -33,6 +33,13 @@
     }
 }
 
+.loading-spinner {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .countries-noitems {
     display: flex;
     margin-top: 2rem;

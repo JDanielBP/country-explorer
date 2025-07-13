@@ -1,5 +1,6 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, inject, OnInit, viewChildren, OnDestroy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ButtonModule } from 'primeng/button';
@@ -10,7 +11,6 @@ import { MenuModule } from 'primeng/menu';
 import { MessageModule } from 'primeng/message';
 import { PopoverModule } from 'primeng/popover';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -44,13 +44,17 @@ import { Country } from '../../core/models/countries.interface';
   templateUrl: './countries-page.component.html',
   styleUrl: './countries-page.component.scss'
 })
-export class CountriesPageComponent implements OnInit {
+export class CountriesPageComponent implements OnInit, OnDestroy {
   loading = true;
   loadingSearch = false;
   error = false;
 
+  pageIndex = 0;
+  pageSize = 10;
+
   countries: Country[] = [];
   filteredCountries: Country[] = [];
+  lazyLoadingCountries: Country[] = [];
 
   search = new FormControl('');
   region = new FormControl('');
@@ -123,9 +127,19 @@ export class CountriesPageComponent implements OnInit {
     { value: 'Antarctic', label: 'Antártida' }
   ];
 
+  observer!: IntersectionObserver;
+  observerRef = viewChildren<ElementRef>('scrollObserver');
+
   private destroyRef = inject(DestroyRef);
   private titleService = inject(TitleService);
   private countryService = inject(CountryService);
+
+  constructor() {
+    effect(() => {
+      const lastElement = this.observerRef()[this.observerRef().length - 1];
+      if (lastElement && lastElement.nativeElement) this.observer.observe(lastElement.nativeElement);
+    });
+  }
 
   ngOnInit() {
     this.titleService.title = 'Listado de países';
@@ -133,14 +147,31 @@ export class CountriesPageComponent implements OnInit {
     this.countryService.getCountries().subscribe({
       next: countries => {
         this.countries = countries;
-        this.filteredCountries = JSON.parse(JSON.stringify(countries));
+        this.filteredCountries = JSON.parse(JSON.stringify(this.countries));
         this.loading = false;
+        this.addMoreCountries();
       },
       error: () => {
         this.loading = false;
         this.error = true;
       }
     });
+
+    this.observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          this.addMoreCountries();
+        }
+        if (this.lazyLoadingCountries.length >= this.filteredCountries.length) {
+          this.observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -100px 0px',
+        threshold: 1
+      }
+    );
 
     merge(this.search.valueChanges, this.region.valueChanges, this.order.valueChanges)
       .pipe(
@@ -151,6 +182,7 @@ export class CountriesPageComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
+        this.pageIndex = 0;
         this.loadingSearch = false;
         this.filteredCountries = this.countries.filter(
           c =>
@@ -160,8 +192,18 @@ export class CountriesPageComponent implements OnInit {
               c.cca3.includes(this.search.value?.toLowerCase() ?? '')) &&
             c.region.toLowerCase().includes(this.region.value?.toLowerCase() ?? '')
         );
+
         this.orderBy(this.order.value!);
+        this.lazyLoadingCountries = [];
+        this.addMoreCountries();
       });
+  }
+
+  addMoreCountries() {
+    this.lazyLoadingCountries.push(
+      ...this.filteredCountries.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize)
+    );
+    this.pageIndex++;
   }
 
   resetInput() {
@@ -198,5 +240,9 @@ export class CountriesPageComponent implements OnInit {
           return 0;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.observer.disconnect();
   }
 }

@@ -74,12 +74,17 @@
 
     @if (filteredCountries.length > 0) {
       <div class="countries-data">
-        @for (country of filteredCountries; track $index) {
-          <div>
+        @for (country of lazyLoadingCountries; track $index) {
+          <div #scrollObserver>
             <app-country-card [country]="country"></app-country-card>
           </div>
         }
       </div>
+      @if (filteredCountries.length > pageIndex * pageSize) {
+        <div class="loading-spinner">
+          <p-progress-spinner ariaLabel="loading" />
+        </div>
+      }
     } @else {
       <p class="countries-noitems">No se encontraron países con el filtro especificado.</p>
     }
