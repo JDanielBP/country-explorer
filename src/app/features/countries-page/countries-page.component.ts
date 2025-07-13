@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -8,7 +8,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MessageModule } from 'primeng/message';
-import { Popover, PopoverModule } from 'primeng/popover';
+import { PopoverModule } from 'primeng/popover';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
@@ -122,8 +122,6 @@ export class CountriesPageComponent implements OnInit {
     { value: 'Oceania', label: 'Oceanía' },
     { value: 'Antarctic', label: 'Antártida' }
   ];
-
-  op = viewChild<Popover>('op');
 
   private destroyRef = inject(DestroyRef);
   private titleService = inject(TitleService);

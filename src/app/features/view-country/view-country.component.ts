@@ -1,8 +1,9 @@
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Location } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -37,11 +38,12 @@ export class ViewCountryComponent implements OnInit {
 
   country: Country = EMPTY_COUNTRY;
   borderCountries: Country[] = [];
-  mapUrl: SafeResourceUrl | undefined;
 
   bg = viewChild<ElementRef>('bg');
+  map = viewChild<ElementRef>('map');
 
   private countryService = inject(CountryService);
+  private destroyRef = inject(DestroyRef);
   private location = inject(Location);
   private route = inject(ActivatedRoute);
   private sanitizer = inject(DomSanitizer);
@@ -49,15 +51,25 @@ export class ViewCountryComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const element = this.bg()?.nativeElement;
-      if (element) element.style.backgroundImage = `url('${this.bgFlag()}')`;
-      this.mapUrl = this.getMapUrl();
+      const bgElement = this.bg()?.nativeElement;
+      if (bgElement) bgElement.style.backgroundImage = `url('${this.bgFlag()}')`;
+
+      const mapElement = this.map()?.nativeElement;
+      if (mapElement) {
+        mapElement.innerHTML = this.safeMapIframe;
+
+        // Se elimina contenido innecesario generado por safeMapIframe
+        const start = mapElement.innerHTML.indexOf('<iframe');
+        const end = mapElement.innerHTML.indexOf('</iframe>');
+        mapElement.innerHTML = (mapElement.innerHTML as string).slice(start, end);
+      }
     });
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const cca3 = params.get('id') ?? '';
+
       this.country = EMPTY_COUNTRY;
       this.borderCountries = [];
 
@@ -86,9 +98,11 @@ export class ViewCountryComponent implements OnInit {
     this.titleService.title = 'Detalle de país';
   }
 
-  getMapUrl() {
+  get safeMapIframe() {
     const url = `https://www.google.com/maps?q=${this.country.latlng[0]},${this.country.latlng[1]}&hl=es&z=6&output=embed`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    return this.sanitizer.bypassSecurityTrustHtml(
+      `<iframe width="100%" height="400" style="border: 0" loading="lazy" src="${url}"></iframe>`
+    );
   }
 
   goBack() {

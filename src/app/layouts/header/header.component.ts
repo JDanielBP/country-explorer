@@ -1,9 +1,11 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { NavComponent } from '../nav/nav.component';
+
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { TitleService } from '../../shared/services/title/title.service';
 
@@ -19,9 +21,10 @@ export class HeaderComponent implements OnInit {
   visible = signal(false);
 
   private titleService = inject(TitleService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
-    this.titleService.title$.subscribe(title => {
+    this.titleService.title$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(title => {
       this.title.set(title);
     });
 
