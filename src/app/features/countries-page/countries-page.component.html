@@ -60,6 +60,13 @@
           (click)="filterMenu.toggle($event)"
         ></p-button>
       </div>
+
+      <p-button
+        [icon]="'pi pi-' + view"
+        [pTooltip]="view === 'table' ? 'Cambiar a vista de cartas' : 'Cambiar a vista de tabla'"
+        tooltipPosition="bottom"
+        (click)="toggleView()"
+      ></p-button>
     </div>
   </section>
 
@@ -73,12 +80,40 @@
     }
 
     @if (filteredCountries.length > 0) {
-      <div class="countries-data">
+      <div class="countries-data" [ngStyle]="{ display: view === 'th-large' ? '' : 'none' }">
         @for (country of lazyLoadingCountries; track $index) {
-          <div #scrollObserver>
+          <div #cardObserver>
             <app-country-card [country]="country"></app-country-card>
           </div>
         }
+      </div>
+      <div [ngStyle]="{ display: view === 'table' ? '' : 'none' }">
+        <p-table [value]="lazyLoadingCountries" [tableStyle]="{ 'min-width': '50rem' }">
+          <ng-template #header>
+            <tr>
+              <th>Bandera</th>
+              <th>Nombre oficial</th>
+              <th>Nombre común</th>
+              <th>Capital</th>
+              <th>Región</th>
+              <th>Subregión</th>
+              <th>Área</th>
+              <th>Pobllación</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-country>
+            <tr #tableObserver>
+              <td style="width: 5rem"><img alt="country" width="100%" [src]="country.flags?.svg" /></td>
+              <td>{{ country.translations?.['spa']?.official }}</td>
+              <td>{{ country.translations?.['spa']?.common }}</td>
+              <td>{{ country.capital }}</td>
+              <td>{{ country.region }}</td>
+              <td>{{ country.subregion }}</td>
+              <td>{{ country.area | number }} km²</td>
+              <td>{{ country.population | number }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
       @if (filteredCountries.length > pageIndex * pageSize) {
         <div class="loading-spinner">

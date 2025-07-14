@@ -10,7 +10,7 @@
     <p><strong>Capital: </strong> {{ country()?.capital }}</p>
     <p><strong>Región: </strong> {{ country()?.region }}</p>
     <p><strong>Sub-Región: </strong> {{ country()?.subregion }}</p>
-    <p><strong>Area: </strong> {{ country()?.area }} km²</p>
+    <p><strong>Area: </strong> {{ country()?.area | number }} km²</p>
     <p><strong>Población: </strong> {{ country()?.population | number }}</p>
   </div>
   <ng-template #footer>

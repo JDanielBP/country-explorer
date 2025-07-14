@@ -34,7 +34,12 @@
           <p><strong>Otros nombres:</strong> {{ country.altSpellings.join(', ') }}</p>
           <p><strong>Región:</strong> {{ country.region }}</p>
           <p><strong>Subregión:</strong> {{ country.subregion }}</p>
-          <p><strong>Capital:</strong> {{ country.capital }}</p>
+          <p>
+            <strong>Capital:</strong>
+            @if (country.capital) {
+              {{ country.capital.join(', ') }}
+            }
+          </p>
         </p-fieldset>
       </div>
 
@@ -58,7 +63,12 @@
           </ul>
           <p><strong>Código del país:</strong> {{ country.cca3 }}</p>
           <p><strong>Dominio(s) de internet: </strong> {{ country.tld.join(', ') }}</p>
-          <p><strong>Código de llamada telefónica: </strong> {{ country.idd.root + country.idd.suffixes[0] }}</p>
+          <p>
+            <strong>Código de llamada telefónica: </strong>
+            @if (country.idd.suffixes) {
+              {{ country.idd.root + country.idd.suffixes[0] }}
+            }
+          </p>
         </p-fieldset>
       </div>
     </div>

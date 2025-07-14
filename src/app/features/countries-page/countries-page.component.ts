@@ -2,6 +2,7 @@ import { Component, DestroyRef, effect, ElementRef, inject, OnInit, viewChildren
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -12,6 +13,8 @@ import { MessageModule } from 'primeng/message';
 import { PopoverModule } from 'primeng/popover';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
+import { TableModule } from 'primeng/table';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { CountryCardComponent } from '../../shared/components/country-card/country-card.component';
@@ -28,6 +31,7 @@ import { Country } from '../../core/models/countries.interface';
   selector: 'app-countries',
   imports: [
     ButtonModule,
+    CommonModule,
     CountryCardComponent,
     InputGroupAddonModule,
     InputGroupModule,
@@ -39,6 +43,8 @@ import { Country } from '../../core/models/countries.interface';
     ReactiveFormsModule,
     RouterModule,
     SelectModule,
+    TableModule,
+    ToggleButtonModule,
     TooltipModule
   ],
   templateUrl: './countries-page.component.html',
@@ -48,10 +54,13 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
   loading = true;
   loadingSearch = false;
   error = false;
+  view: 'table' | 'th-large' = 'th-large';
 
   pageIndex = 0;
   pageSize = 10;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lastElement!: ElementRef<any>;
   countries: Country[] = [];
   filteredCountries: Country[] = [];
   lazyLoadingCountries: Country[] = [];
@@ -127,8 +136,25 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
     { value: 'Antarctic', label: 'Antártida' }
   ];
 
-  observer!: IntersectionObserver;
-  observerRef = viewChildren<ElementRef>('scrollObserver');
+  observer: IntersectionObserver = new IntersectionObserver(
+    entries => {
+      if (entries[0].isIntersecting) {
+        this.observer.unobserve(entries[0].target);
+        this.addMoreCountries();
+      }
+      if (this.lazyLoadingCountries.length >= this.filteredCountries.length) {
+        this.observer.disconnect();
+      }
+    },
+    {
+      root: null,
+      rootMargin: '0px 0px -100px 0px',
+      threshold: 1
+    }
+  );
+
+  cardObserver = viewChildren<ElementRef>('cardObserver');
+  tableObserver = viewChildren<ElementRef>('tableObserver');
 
   private destroyRef = inject(DestroyRef);
   private titleService = inject(TitleService);
@@ -136,8 +162,7 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const lastElement = this.observerRef()[this.observerRef().length - 1];
-      if (lastElement && lastElement.nativeElement) this.observer.observe(lastElement.nativeElement);
+      this.toggleObserver();
     });
   }
 
@@ -149,6 +174,8 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
         this.countries = countries;
         this.filteredCountries = JSON.parse(JSON.stringify(this.countries));
         this.loading = false;
+
+        this.orderBy(this.order.value!);
         this.addMoreCountries();
       },
       error: () => {
@@ -156,22 +183,6 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
         this.error = true;
       }
     });
-
-    this.observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting) {
-          this.addMoreCountries();
-        }
-        if (this.lazyLoadingCountries.length >= this.filteredCountries.length) {
-          this.observer.disconnect();
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px 0px -100px 0px',
-        threshold: 1
-      }
-    );
 
     merge(this.search.valueChanges, this.region.valueChanges, this.order.valueChanges)
       .pipe(
@@ -204,6 +215,20 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
       ...this.filteredCountries.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize)
     );
     this.pageIndex++;
+  }
+
+  toggleView() {
+    this.view = this.view === 'table' ? 'th-large' : 'table';
+    this.toggleObserver();
+  }
+
+  toggleObserver() {
+    if (this.lastElement && this.lastElement.nativeElement) this.observer.unobserve(this.lastElement.nativeElement);
+
+    if (this.view === 'table') this.lastElement = this.tableObserver()[this.tableObserver().length - 1];
+    else this.lastElement = this.cardObserver()[this.cardObserver().length - 1];
+
+    if (this.lastElement && this.lastElement.nativeElement) this.observer.observe(this.lastElement.nativeElement);
   }
 
   resetInput() {
