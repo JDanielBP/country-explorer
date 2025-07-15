@@ -13,8 +13,14 @@
 
 .vc-title {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 2rem;
+    margin-bottom: 2rem;
+    & > :first-child {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
 }
 
 .vc-spinner {
@@ -25,7 +31,6 @@
 }
 
 section {
-    margin-top: 2rem;
     display: grid;
     grid-template-columns: repeat(2, calc(50% - 1rem));
     gap: 2rem;
