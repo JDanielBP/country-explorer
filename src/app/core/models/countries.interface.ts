@@ -34,6 +34,8 @@ export interface Country {
   startOfWeek: string;
   capitalInfo: CapitalInfo;
   postalCode: PostalCode;
+
+  favorites: boolean;
 }
 
 export interface CapitalInfo {

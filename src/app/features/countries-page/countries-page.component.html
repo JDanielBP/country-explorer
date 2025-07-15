@@ -99,6 +99,7 @@
               <th>Subregión</th>
               <th>Área</th>
               <th>Pobllación</th>
+              <th></th>
             </tr>
           </ng-template>
           <ng-template #body let-country>
@@ -111,6 +112,17 @@
               <td>{{ country.subregion }}</td>
               <td>{{ country.area | number }} km²</td>
               <td>{{ country.population | number }}</td>
+              <td class="table-actions">
+                <p-button
+                  icon="pi pi-eye"
+                  [rounded]="true"
+                  variant="text"
+                  pTooltip="Ver"
+                  tooltipPosition="top"
+                  (click)="onCountrySelected(country.cca3)"
+                />
+                <app-save-button [country]="country"></app-save-button>
+              </td>
             </tr>
           </ng-template>
         </p-table>

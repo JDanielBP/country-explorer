@@ -82,5 +82,7 @@ export const EMPTY_COUNTRY: Country = {
   postalCode: {
     format: '',
     regex: ''
-  }
+  },
+
+  favorites: false
 };

@@ -1,6 +1,6 @@
 import { Component, DestroyRef, effect, ElementRef, inject, OnInit, viewChildren, OnDestroy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 
@@ -18,6 +18,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { CountryCardComponent } from '../../shared/components/country-card/country-card.component';
+import { SaveButtonComponent } from '../../shared/components/save-button/save-button.component';
 
 import { debounceTime, merge, tap } from 'rxjs';
 import { MenuItem } from 'primeng/api';
@@ -42,6 +43,7 @@ import { Country } from '../../core/models/countries.interface';
     ProgressSpinnerModule,
     ReactiveFormsModule,
     RouterModule,
+    SaveButtonComponent,
     SelectModule,
     TableModule,
     ToggleButtonModule,
@@ -69,98 +71,25 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
   region = new FormControl('');
   order = new FormControl('official-name-asc');
 
-  items: MenuItem[] = [
-    {
-      label: 'Ordernar por',
-      items: [
-        {
-          label: 'Nombre oficial (A - Z)',
-          icon: 'pi pi-sort-up',
-          command: () => this.order.setValue('official-name-asc')
-        },
-        {
-          label: 'Nombre oficial (Z -A)',
-          icon: 'pi pi-sort-down',
-          command: () => this.order.setValue('official-name-desc')
-        },
-        {
-          label: 'Nombre común (A - Z)',
-          icon: 'pi pi-sort-up',
-          command: () => this.order.setValue('common-name-asc')
-        },
-        {
-          label: 'Nombre común (Z - A)',
-          icon: 'pi pi-sort-down',
-          command: () => this.order.setValue('common-name-desc')
-        },
-        {
-          label: 'Capital (A - Z)',
-          icon: 'pi pi-sort-up',
-          command: () => this.order.setValue('capital-asc')
-        },
-        {
-          label: 'Capital (Z - A)',
-          icon: 'pi pi-sort-down',
-          command: () => this.order.setValue('capital-desc')
-        },
-        {
-          label: 'Mayor población',
-          icon: 'pi pi-sort-up',
-          command: () => this.order.setValue('population-desc')
-        },
-        {
-          label: 'Menor población',
-          icon: 'pi pi-sort-down',
-          command: () => this.order.setValue('population-asc')
-        },
-        {
-          label: 'Mayor área',
-          icon: 'pi pi-sort-up',
-          command: () => this.order.setValue('area-desc')
-        },
-        {
-          label: 'Menor área',
-          icon: 'pi pi-sort-down',
-          command: () => this.order.setValue('area-asc')
-        }
-      ]
-    }
-  ];
+  items: MenuItem[] = [];
 
-  regions = [
-    { value: 'Africa', label: 'África' },
-    { value: 'Americas', label: 'América' },
-    { value: 'Asia', label: 'Asia' },
-    { value: 'Europe', label: 'Europa' },
-    { value: 'Oceania', label: 'Oceanía' },
-    { value: 'Antarctic', label: 'Antártida' }
-  ];
+  regions: {
+    value: string;
+    label: string;
+  }[] = [];
 
-  observer: IntersectionObserver = new IntersectionObserver(
-    entries => {
-      if (entries[0].isIntersecting) {
-        this.observer.unobserve(entries[0].target);
-        this.addMoreCountries();
-      }
-      if (this.lazyLoadingCountries.length >= this.filteredCountries.length) {
-        this.observer.disconnect();
-      }
-    },
-    {
-      root: null,
-      rootMargin: '0px 0px -100px 0px',
-      threshold: 1
-    }
-  );
+  observer!: IntersectionObserver;
 
   cardObserver = viewChildren<ElementRef>('cardObserver');
   tableObserver = viewChildren<ElementRef>('tableObserver');
 
+  private countryService = inject(CountryService);
   private destroyRef = inject(DestroyRef);
   private titleService = inject(TitleService);
-  private countryService = inject(CountryService);
+  private router = inject(Router);
 
   constructor() {
+    this.initData();
     effect(() => {
       this.toggleObserver();
     });
@@ -265,6 +194,96 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
           return 0;
       }
     });
+  }
+
+  onCountrySelected(cca3: string) {
+    this.router.navigate(['/countries', cca3]);
+  }
+
+  initData() {
+    this.items = [
+      {
+        label: 'Ordernar por',
+        items: [
+          {
+            label: 'Nombre oficial (A - Z)',
+            icon: 'pi pi-sort-up',
+            command: () => this.order.setValue('official-name-asc')
+          },
+          {
+            label: 'Nombre oficial (Z -A)',
+            icon: 'pi pi-sort-down',
+            command: () => this.order.setValue('official-name-desc')
+          },
+          {
+            label: 'Nombre común (A - Z)',
+            icon: 'pi pi-sort-up',
+            command: () => this.order.setValue('common-name-asc')
+          },
+          {
+            label: 'Nombre común (Z - A)',
+            icon: 'pi pi-sort-down',
+            command: () => this.order.setValue('common-name-desc')
+          },
+          {
+            label: 'Capital (A - Z)',
+            icon: 'pi pi-sort-up',
+            command: () => this.order.setValue('capital-asc')
+          },
+          {
+            label: 'Capital (Z - A)',
+            icon: 'pi pi-sort-down',
+            command: () => this.order.setValue('capital-desc')
+          },
+          {
+            label: 'Mayor población',
+            icon: 'pi pi-sort-up',
+            command: () => this.order.setValue('population-desc')
+          },
+          {
+            label: 'Menor población',
+            icon: 'pi pi-sort-down',
+            command: () => this.order.setValue('population-asc')
+          },
+          {
+            label: 'Mayor área',
+            icon: 'pi pi-sort-up',
+            command: () => this.order.setValue('area-desc')
+          },
+          {
+            label: 'Menor área',
+            icon: 'pi pi-sort-down',
+            command: () => this.order.setValue('area-asc')
+          }
+        ]
+      }
+    ];
+
+    this.regions = [
+      { value: 'Africa', label: 'África' },
+      { value: 'Americas', label: 'América' },
+      { value: 'Asia', label: 'Asia' },
+      { value: 'Europe', label: 'Europa' },
+      { value: 'Oceania', label: 'Oceanía' },
+      { value: 'Antarctic', label: 'Antártida' }
+    ];
+
+    this.observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          this.observer.unobserve(entries[0].target);
+          this.addMoreCountries();
+        }
+        if (this.lazyLoadingCountries.length >= this.filteredCountries.length) {
+          this.observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1
+      }
+    );
   }
 
   ngOnDestroy() {

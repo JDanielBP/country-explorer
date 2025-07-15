@@ -1,0 +1,8 @@
+<p-button
+  [icon]="country().favorites ? 'pi pi-heart-fill' : 'pi pi-heart'"
+  [rounded]="true"
+  variant="text"
+  [pTooltip]="isFavorite() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+  tooltipPosition="top"
+  (click)="onCountrySaved()"
+/>

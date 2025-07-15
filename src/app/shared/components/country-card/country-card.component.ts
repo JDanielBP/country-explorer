@@ -1,83 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output, OnInit } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
+
+import { SaveButtonComponent } from '../save-button/save-button.component';
 
 import { Country } from '../../../core/models/countries.interface';
 
+import { EMPTY_COUNTRY } from '../../../core/models/empty-country.const';
+
 @Component({
   selector: 'app-country-card',
-  imports: [ButtonModule, CardModule, CommonModule, TooltipModule],
+  imports: [ButtonModule, CardModule, CommonModule, SaveButtonComponent, TooltipModule],
   templateUrl: './country-card.component.html',
   styleUrl: './country-card.component.scss'
 })
-export class CountryCardComponent implements OnInit {
-  fillIcon = '';
+export class CountryCardComponent {
+  country = input<Country>(EMPTY_COUNTRY);
+  stroke = input<boolean>(true);
 
-  country = input<Country>();
   deletedCountry = output<string>();
 
-  private messageService = inject(MessageService);
   private router = inject(Router);
 
-  ngOnInit() {
-    const favorites = this.getFavorites();
-    const exists = favorites.find(f => f === this.country()!.cca3);
-
-    if (exists) {
-      this.fillIcon = '-fill';
-    }
-  }
-
-  getFavorites() {
-    return JSON.parse(localStorage.getItem('favorites') ?? '[]') as string[];
-  }
-
-  isFavorite() {
-    return this.fillIcon.includes('-fill');
-  }
-
   onCountrySelected() {
-    this.router.navigate(['/countries', this.country()!.cca3]);
+    this.router.navigate(['/countries', this.country().cca3]);
   }
 
-  onCountrySaved() {
-    this.messageService.clear();
-    let favorites = this.getFavorites();
-
-    const exists = favorites.find(f => f === this.country()!.cca3);
-
-    // Si existe, se elimina
-    if (exists) {
-      favorites = favorites.filter(f => f !== this.country()!.cca3);
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-
-      this.fillIcon = '';
-      this.deletedCountry.emit(this.country()!.cca3);
-
-      return this.messageService.add({
-        severity: 'error',
-        summary: 'País eliminado de favoritos'
-      });
-    }
-
-    // Si no existe, se agrega
-    else {
-      if (favorites) {
-        localStorage.setItem('favorites', JSON.stringify([...favorites, this.country()!.cca3]));
-      } else {
-        localStorage.setItem('favorites', JSON.stringify([this.country()!.cca3]));
-      }
-      this.fillIcon = '-fill';
-
-      this.messageService.add({
-        severity: 'success',
-        summary: 'País añadido a favoritos'
-      });
-    }
+  onDeletedCountry() {
+    this.deletedCountry.emit(this.country().cca3);
   }
 }

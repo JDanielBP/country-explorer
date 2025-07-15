@@ -12,7 +12,11 @@
       <div class="countries-data">
         @for (country of filteredCountries; track $index) {
           <div>
-            <app-country-card [country]="country" (deletedCountry)="deletedCountry($event)"></app-country-card>
+            <app-country-card
+              [country]="country"
+              [stroke]="false"
+              (deletedCountry)="deletedCountry($event)"
+            ></app-country-card>
           </div>
         }
       </div>

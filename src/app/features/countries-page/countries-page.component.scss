@@ -49,6 +49,10 @@
     justify-content: center;
 }
 
+.table-actions {
+    width: 7rem;
+}
+
 @media screen and (max-width: 959px) {
     .countries-filters {
         display: flex;
