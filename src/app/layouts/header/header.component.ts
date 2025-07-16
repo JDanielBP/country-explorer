@@ -1,12 +1,12 @@
 import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { NavComponent } from '../nav/nav.component';
 
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { ThemesService } from '../../shared/services/themes/themes.service';
 import { TitleService } from '../../shared/services/title/title.service';
 
 @Component({
@@ -16,10 +16,11 @@ import { TitleService } from '../../shared/services/title/title.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
-  theme = signal('light-mode');
+  theme = signal('');
   title = signal('');
   visible = signal(false);
 
+  private themesService = inject(ThemesService);
   private titleService = inject(TitleService);
   private destroyRef = inject(DestroyRef);
 
@@ -28,19 +29,13 @@ export class HeaderComponent implements OnInit {
       this.title.set(title);
     });
 
-    const theme = localStorage.getItem('theme');
-    if (theme) this.theme.set(theme);
-
-    if (this.theme()) document.querySelector('html')?.classList.add(this.theme());
-    else document.querySelector('html')?.classList.add(this.theme());
-    localStorage.setItem('theme', this.theme());
+    this.themesService.theme$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(theme => {
+      this.theme.set(theme);
+    });
   }
 
   toggleDarkMode() {
-    const element = document.querySelector('html')!;
-    this.theme.set(this.theme() === 'light-mode' ? 'dark-mode' : 'light-mode');
-    element.classList.toggle('dark-mode');
-    element.classList.toggle('light-mode');
-    localStorage.setItem('theme', this.theme());
+    this.themesService.toggleTheme();
+    this.theme.set(this.themesService._theme);
   }
 }
