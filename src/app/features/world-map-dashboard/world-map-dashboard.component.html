@@ -1,0 +1,110 @@
+<section class="wmd-title">
+  <h1>{{ csTitle }}</h1>
+  <div>
+    <p-button
+      icon="pi pi-arrow-down"
+      [text]="true"
+      [rounded]="true"
+      (click)="scrollToSection()"
+      pTooltip="Ver estadísticas"
+      tooltipPosition="bottom"
+    >
+    </p-button>
+
+    <div class="wmd-menu-button">
+      <p-menu #menu [model]="items" [popup]="true" />
+      <p-button
+        icon="pi pi-ellipsis-v"
+        [text]="true"
+        [rounded]="true"
+        (click)="menu.toggle($event)"
+        pTooltip="Menú"
+        tooltipPosition="bottom"
+      />
+    </div>
+  </div>
+</section>
+
+<section class="wmd-nav">
+  <div>
+    <app-interactive-world-map
+      [countries]="countries"
+      (selectedCountry)="goTo($event)"
+      [highlights]="highlights"
+      maxHeight="calc(100vh - 13rem)"
+    ></app-interactive-world-map>
+  </div>
+
+  <div>
+    <p-menu [model]="items" />
+  </div>
+</section>
+
+<section id="more-stats" class="wmd-chart-bar">
+  <h2>{{ countriesLength === filteredCountries.length ? csTitle : csTitle + ' (Mayor población)' }}</h2>
+  <p-chart
+    #chart
+    type="bar"
+    [data]="basicData"
+    [options]="basicOptions"
+    [style]="{ width: '100%', height: '400px' }"
+  ></p-chart>
+</section>
+
+<section>
+  <p-table
+    #countryTable
+    [value]="filteredCountries"
+    showGridlines
+    [paginator]="true"
+    paginatorPosition="top"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['spanishName']"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template #caption>
+      <input
+        pInputText
+        type="text"
+        (input)="inputFilter($event)"
+        placeholder="Buscar país"
+        [style]="{ width: '100%' }"
+      />
+    </ng-template>
+    <ng-template #header>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Área</th>
+        <th>Población</th>
+        <th>Densidad poblacional</th>
+        <th>Países fronterizos</th>
+        <th>Idiomas</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-country let-rowIndex="rowIndex">
+      <tr>
+        <td>{{ rowIndex + 1 }}</td>
+        <td>
+          <a [routerLink]="['/countries', country.cca3]" style="color: var(--p-primary-color)">{{
+            country.translations['spa'].common
+          }}</a>
+        </td>
+        <td>{{ country.area | number }} km²</td>
+        <td>{{ country.population | number }}</td>
+        <td>{{ country.population / country.area | number }} hab/km²</td>
+        <td class="wmd-text-justify">
+          @for (border of getBorders(country.borders); let last = $last; track $index) {
+            <a [routerLink]="['/countries', border!.cca3]" style="color: var(--p-primary-color)">
+              {{ border!.translations['spa'].common }}</a
+            >{{ !last ? ', ' : '' }}
+          }
+        </td>
+        <td class="wmd-text-justify">
+          {{ getLanguages(country.languages) }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</section>

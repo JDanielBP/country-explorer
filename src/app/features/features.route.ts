@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 
 import { CountriesPageComponent } from './countries-page/countries-page.component';
+import { WorldMapDashboardComponent } from './world-map-dashboard/world-map-dashboard.component';
 import { FavoritesComponent } from './favorites/favorites.component';
 import { MainComponent } from '../layouts/main/main.component';
 import { ViewCountryComponent } from './view-country/view-country.component';
@@ -13,6 +14,7 @@ export const routes: Route[] = [
       { path: 'countries', component: CountriesPageComponent },
       { path: 'countries/:id', component: ViewCountryComponent },
       { path: 'favorites', component: FavoritesComponent },
+      { path: 'world-map', component: WorldMapDashboardComponent },
       { path: '**', redirectTo: 'countries' }
     ]
   }

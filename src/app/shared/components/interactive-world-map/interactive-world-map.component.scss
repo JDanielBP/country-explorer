@@ -1,0 +1,26 @@
+.iwm {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--p-menu-border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    & > :first-child {
+        text-align: center;
+    }
+}
+
+.iwm-reset-position {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.iwm-zoom-in-out {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 1rem;
+}

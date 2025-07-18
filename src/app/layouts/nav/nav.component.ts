@@ -40,6 +40,12 @@ export class NavComponent implements OnInit {
             icon: 'pi pi-heart',
             routerLink: 'favorites',
             command: () => this.visible.set(false)
+          },
+          {
+            label: 'Mapa mundial',
+            icon: 'pi pi-globe',
+            routerLink: 'world-map',
+            command: () => this.visible.set(false)
           }
         ]
       }

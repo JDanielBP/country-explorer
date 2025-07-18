@@ -1,0 +1,40 @@
+<div class="iwm">
+  <div #mapSvg></div>
+
+  <div class="iwm-zoom-in-out">
+    <p-button
+      icon="pi pi-minus"
+      severity="secondary"
+      [rounded]="true"
+      [text]="true"
+      (click)="zoomOut()"
+      pTooltip="Alejar"
+      tooltipPosition="bottom"
+    >
+    </p-button>
+    <p-button
+      icon="pi pi-plus"
+      severity="secondary"
+      [rounded]="true"
+      [text]="true"
+      (click)="zoomIn()"
+      pTooltip="Acercar"
+      tooltipPosition="bottom"
+    >
+    </p-button>
+  </div>
+  <div class="iwm-reset-position">
+    <p-button
+      severity="secondary"
+      [rounded]="true"
+      [text]="true"
+      (click)="resetMapPosition()"
+      pTooltip="Centrar"
+      tooltipPosition="bottom"
+    >
+      <ng-template pTemplate="content">
+        <span class="material-icons">my_location</span>
+      </ng-template>
+    </p-button>
+  </div>
+</div>

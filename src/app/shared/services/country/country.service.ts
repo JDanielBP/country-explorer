@@ -53,4 +53,14 @@ export class CountryService {
     const params = new HttpParams().set('fullText', 'true').set('fields', field);
     return this.http.get<Country>(`${this.baseUrl}/alpha/${cca3}`, { params });
   }
+
+  /**
+   *
+   * @returns flags, population, translations, region, subregion, languages, borders, area, cca2, cca3
+   */
+  getCountriesForWorldMap(): Observable<Country[]> {
+    const field = 'flags,population,translations,region,subregion,languages,borders,area,cca2,cca3';
+    const params = new HttpParams().set('fields', field);
+    return this.http.get<Country[]>(`${this.baseUrl}/all`, { params });
+  }
 }
