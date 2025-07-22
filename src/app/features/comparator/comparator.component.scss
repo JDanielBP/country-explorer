@@ -1,0 +1,65 @@
+.comp-main-btns {
+    height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.comp-option {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.comp-section {
+    overflow-x: auto;
+    min-height: calc(100vh - 11rem);
+}
+
+.comp-column {
+    display: grid;
+    gap: 2rem;
+}
+
+.comp-img {
+    margin: 1rem auto;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    border: 1px solid var(--p-menu-border-color);
+    border-radius: 6px;
+    & > img {
+        max-height: 10rem;
+        max-width: 20rem;
+    }
+}
+
+.comp-width-10 {
+    width: 100%;
+    min-width: 10rem;
+}
+
+.comp-width-14 {
+    width: 100%;
+    min-width: 14rem;
+}
+
+p {
+    text-align: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    border: 1px solid var(--p-menu-border-color);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.comp-country-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+}

@@ -41,7 +41,7 @@ export class CountryService {
    * @returns All data about a country
    */
   getCountryByCode(cca3: string): Observable<Country> {
-    return this.http.get<Country[]>(`${this.baseUrl}/alpha/${cca3}?fullText=true`).pipe(map(country => country[0]));
+    return this.http.get<Country[]>(`${this.baseUrl}/alpha/${cca3}`).pipe(map(country => country[0]));
   }
 
   /**
@@ -62,5 +62,21 @@ export class CountryService {
     const field = 'flags,population,translations,region,subregion,languages,borders,area,cca2,cca3';
     const params = new HttpParams().set('fields', field);
     return this.http.get<Country[]>(`${this.baseUrl}/all`, { params });
+  }
+
+  /**
+   *
+   * @returns name, flags, translations, cca3
+   */
+  getAllShortInfo(): Observable<Country[]> {
+    const field = 'name,flags,translations,cca3';
+    const params = new HttpParams().set('fields', field);
+    return this.http
+      .get<Country[]>(`${this.baseUrl}/all`, { params })
+      .pipe(
+        map(countries =>
+          countries.sort((a, b) => a.translations['spa'].common.localeCompare(b.translations['spa'].common))
+        )
+      );
   }
 }

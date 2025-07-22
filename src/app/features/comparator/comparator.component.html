@@ -1,0 +1,255 @@
+<div class="comp-main-btns">
+  <p-button
+    severity="info"
+    label="Comparar!"
+    icon="pi pi-play-circle"
+    [text]="true"
+    [rounded]="true"
+    (click)="compare()"
+    [disabled]="minInfo()"
+  >
+  </p-button>
+  <div>
+    <p-button
+      severity="danger"
+      label="Eliminar"
+      icon="pi pi-minus"
+      [text]="true"
+      [rounded]="true"
+      (click)="removeOption(countriesForm.length - 1)"
+      [disabled]="lower()"
+    >
+    </p-button>
+    <p-button
+      severity="info"
+      label="Agregar"
+      icon="pi pi-plus"
+      [text]="true"
+      [rounded]="true"
+      (click)="addOption()"
+      [disabled]="upper()"
+    >
+    </p-button>
+  </div>
+</div>
+
+<section class="comp-section">
+  <div>
+    <form [formGroup]="myForm" autocomplete="off">
+      <div
+        formArrayName="selectedCountries"
+        class="comp-column"
+        [style]="'grid-template-columns: ' + gridTemplateColumns()"
+      >
+        @for (item of countriesForm.controls; track $index) {
+          <div class="comp-width-14">
+            <p-select
+              [options]="countriesShortInfo"
+              optionLabel="spanishName"
+              optionValue="cca3"
+              [formControlName]="$index"
+              [filter]="true"
+              [style]="{ width: '100%', 'min-width': '10rem' }"
+              placeholder="Selecciona un país"
+              [loading]="loading"
+              (onChange)="check($index, $event)"
+              appendTo="body"
+            >
+              <ng-template #selectedItem let-selected>
+                <div class="comp-option" *ngIf="selected">
+                  <img
+                    [src]="selected.flags.svg"
+                    [class]="'flag flag-' + selected.cca3"
+                    style="width: 18px"
+                    alt="flag"
+                  />
+                  <div>{{ selected.spanishName }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-country #item>
+                <div class="comp-option">
+                  <img [src]="country.flags.svg" [class]="'flag flag-' + country.cca3" style="width: 18px" alt="flag" />
+                  <div>{{ country.spanishName }}</div>
+                </div>
+              </ng-template>
+            </p-select>
+          </div>
+        }
+      </div>
+    </form>
+  </div>
+
+  <!-- Flags -->
+  <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+    @for (country of cca3s; track $index) {
+      <div class="comp-width-14 comp-img">
+        @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === country) {
+          <img [src]="countriesToCompare[$index].flags.svg" width="auto" alt="flag" class="comp-width-10" />
+        } @else {
+          <div style="text-align: center">
+            @if (countriesForm.controls[$index].value) {
+              Haz click en Comparar!
+            } @else {
+              Selecciona un país para comparar
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div>
+    <!-- Buttons -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14 comp-country-btns">
+                <p-button
+                  icon="pi pi-eye"
+                  [rounded]="true"
+                  variant="text"
+                  pTooltip="Ver"
+                  tooltipPosition="top"
+                  [routerLink]="['/countries', cca3]"
+                  pTooltip="Ver"
+                  tooltipPosition="bottom"
+                />
+                <app-save-button [country]="countriesToCompare[$index]"></app-save-button>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Official name -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14">
+                <b>Nombre oficial</b>
+                <span>{{ countriesToCompare[$index].translations['spa'].official }}</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Common name -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14">
+                <b>Nombre común</b>
+                <span>{{ countriesToCompare[$index].translations['spa'].common }}</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Population -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14" [ngStyle]="population(countriesToCompare[$index])">
+                <b>Habitantes</b>
+                <span>{{ countriesToCompare[$index].population | number }}</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Area -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14" [ngStyle]="area(countriesToCompare[$index])">
+                <b>Área</b>
+                <span>{{ countriesToCompare[$index].area | number }} km²</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Borders -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14" [ngStyle]="borders(countriesToCompare[$index])">
+                <b>Fronteras</b>
+                <span>{{ (countriesToCompare[$index].borders || []).length | number }}</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Timezones -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p class="comp-width-14" [ngStyle]="timezones(countriesToCompare[$index])">
+                <b>Zonas horarias</b>
+                <span>{{ (countriesToCompare[$index].timezones || []).length | number }}</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p [ngStyle]="languages(countriesToCompare[$index])">
+                <b>Idiomas</b>
+                <span>{{ languagesCount(countriesToCompare[$index]) }}</span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Currencies -->
+    <div>
+      <div class="comp-column" [style]="'grid-template-columns: ' + gridTemplateColumns()">
+        @for (cca3 of cca3s; track $index) {
+          <div class="comp-width-14">
+            @if (countriesToCompare[$index] && countriesToCompare[$index].cca3 === cca3) {
+              <p [ngStyle]="currencies(countriesToCompare[$index])">
+                <b>Monedas</b>
+                <span>{{ currenciesCount(countriesToCompare[$index]) }} </span>
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -42,6 +42,12 @@ export class NavComponent implements OnInit {
             command: () => this.visible.set(false)
           },
           {
+            label: 'Comparador de países',
+            icon: 'pi pi-sliders-h',
+            routerLink: 'comparator',
+            command: () => this.visible.set(false)
+          },
+          {
             label: 'Mapa mundial',
             icon: 'pi pi-globe',
             routerLink: 'world-map',
