@@ -30,7 +30,7 @@ export class CountryService {
     const field = 'name,capital,flags,translations,region,cca3';
 
     const cca3s = JSON.parse(localStorage.getItem('favorites') || '[]') as string[];
-    if (!cca3s) return of([]);
+    if (cca3s.length === 0) return of([]);
 
     const params = new HttpParams().set('codes', cca3s.join(',')).set('fields', field);
     return this.http.get<Country[]>(`${this.baseUrl}/alpha`, { params });
@@ -50,7 +50,7 @@ export class CountryService {
    */
   getBorderCountries(cca3: string): Observable<Country> {
     const field = 'name,flags,translations,cca3';
-    const params = new HttpParams().set('fullText', 'true').set('fields', field);
+    const params = new HttpParams().set('fields', field);
     return this.http.get<Country>(`${this.baseUrl}/alpha/${cca3}`, { params });
   }
 

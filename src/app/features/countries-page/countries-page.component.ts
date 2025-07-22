@@ -281,7 +281,7 @@ export class CountriesPageComponent implements OnInit, OnDestroy {
       {
         root: null,
         rootMargin: '0px',
-        threshold: 1
+        threshold: 0
       }
     );
   }

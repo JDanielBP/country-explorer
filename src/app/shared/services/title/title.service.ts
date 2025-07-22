@@ -11,5 +11,6 @@ export class TitleService {
 
   set title(value: string) {
     this.titleSubject.next(value);
+    document.title = 'Country Explorer: ' + value;
   }
 }

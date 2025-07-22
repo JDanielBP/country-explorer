@@ -36,7 +36,7 @@
         <span (click)="op.hide()"> Buscar país por nombre, capital o región</span>
       </p-popover>
 
-      <p-menu #filterMenu [model]="items" [popup]="true" />
+      <p-menu #filterMenu [model]="items" [popup]="true" appendTo="body" />
     </p-inputgroup>
 
     <div>
@@ -49,6 +49,7 @@
         scrollHeight="250px"
         [showClear]="true"
         [style]="{ width: '100%' }"
+        appendTo="body"
       />
 
       <div>
