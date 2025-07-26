@@ -24,6 +24,14 @@ Aplicación desarrollada en **Angular v19** para explorar información sobre los
 **Vista detallada del país seleccionado**
 - Accede a toda la información proporcionada por la API https://restcountries.com
 
+**Comparador de países**
+- **Compara** información clave de hasta **8 países a la vez**, como población, área, número de fronteras, zonas horarias, idiomas y monedas
+
+**Mapa mundial**
+- Muestra un mapa interactivo donde puedes visualizar la ubicación geográfica de todos los países, una gráfica y una tabla con información adicional.
+- Haz clic en un país para ver la **Vista detallada del país seleccionado**
+- Aplica filtros para destacar países o regiones completas según criterios como población, área, densidad poblacional, etc.
+
 ---
 
 ## ▶️ Cómo ejecutar la aplicación
@@ -43,3 +51,5 @@ Aplicación desarrollada en **Angular v19** para explorar información sobre los
 ![Menú desplegable](assets/4.png)
 ![Información del país](assets/5.png)
 ![Favoritos](assets/6.png)
+![Comparador de países](assets/7.png)
+![Mapa mundial](assets/8.png)
